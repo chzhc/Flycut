@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FlycutStoreDelegate, FlycutOperatorDelegate, MJCloudKitUserDefaultsSyncDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FlycutStoreDelegate, FlycutOperatorDelegate/*, MJCloudKitUserDefaultsSyncDelegate*/ {
 
 	let flycut:FlycutOperator = FlycutOperator()
 	var activeUpdates:Int = 0
@@ -38,7 +38,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		// Use this command to get screenshots:
 		// while true; do xcrun simctl io booted screenshot;sleep 1;done
 
-		MJCloudKitUserDefaultsSync.shared()?.setDelegate(self)
+//		MJCloudKitUserDefaultsSync.shared()?.setDelegate(self)
 
 		if ( UserDefaults.standard.bool(forKey: "demoForAppStoreScreenshots") )
 		{

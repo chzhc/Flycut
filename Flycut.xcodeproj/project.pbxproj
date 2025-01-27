@@ -59,8 +59,6 @@
 		77A4F3B3139BD72300F39666 /* SGKeyCombo.h in Headers */ = {isa = PBXBuildFile; fileRef = 77A4F3AB139BD72300F39666 /* SGKeyCombo.h */; };
 		77A4F3B4139BD72300F39666 /* SGKeyCombo.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A4F3AC139BD72300F39666 /* SGKeyCombo.m */; };
 		77AE72BD23CAE81A00F6A44B /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AE72BC23CAE81A00F6A44B /* ApplicationServices.framework */; };
-		77AE730623D2D49100F6A44B /* MJCloudKitUserDefaultsSync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF82B3B2098F9CA00E2A1B9 /* MJCloudKitUserDefaultsSync.framework */; };
-		77AE730723D2D49100F6A44B /* MJCloudKitUserDefaultsSync.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF82B3B2098F9CA00E2A1B9 /* MJCloudKitUserDefaultsSync.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		77DA6B921CB9549B0077917F /* FlycutStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DA6B8E1CB9549B0077917F /* FlycutStore.m */; };
 		77DA6B931CB9549B0077917F /* FlycutStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 77DA6B8F1CB9549B0077917F /* FlycutStore.h */; };
 		77DA6B941CB9549B0077917F /* FlycutClipping.m in Sources */ = {isa = PBXBuildFile; fileRef = 77DA6B901CB9549B0077917F /* FlycutClipping.m */; };
@@ -198,17 +196,6 @@
 			files = (
 				77192A3A23D6F46F00EDB9BC /* FlycutHelper.app in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		77AE730823D2D49100F6A44B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				77AE730723D2D49100F6A44B /* MJCloudKitUserDefaultsSync.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8DCE826C1F4550AA00124117 /* Embed Frameworks */ = {
@@ -379,7 +366,6 @@
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				77192A3823D6EADF00EDB9BC /* ServiceManagement.framework in Frameworks */,
 				AAFAC85F0A1BD9DD00DC6025 /* Carbon.framework in Frameworks */,
-				77AE730623D2D49100F6A44B /* MJCloudKitUserDefaultsSync.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -781,7 +767,6 @@
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				8D60A1BA1BC8399900A26CBF /* Set meaningful build number */,
 				AAE2036C0A27B2B9002DCC2A /* Headers */,
-				77AE730823D2D49100F6A44B /* Embed Frameworks */,
 				77192A3923D6F45F00EDB9BC /* CopyFiles */,
 			);
 			buildRules = (
@@ -819,8 +804,7 @@
 				TargetAttributes = {
 					77192A2523D6EA7A00EDB9BC = {
 						CreatedOnToolsVersion = 11.3;
-						DevelopmentTeam = S8JLSG5ES7;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					8D0C11A41F171B140046FAA0 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -849,8 +833,7 @@
 						TestTargetID = 8D0C11A41F171B140046FAA0;
 					};
 					8D1107260486CEB800E47090 = {
-						DevelopmentTeam = S8JLSG5ES7;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 0;
@@ -1017,7 +1000,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		8D60A1BA1BC8399900A26CBF /* Set meaningful build number */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -1026,9 +1009,9 @@
 			name = "Set meaningful build number";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the build number to identify, to some extent, the git version of the code.\n# Combines the hash of the origin commit, number of commits of divergence, local HEAD commit, local uncommitted lines of change, and year/month of build.\n# Eliminates all except for the origin commit if there are no local changes, since that can be easily tracked.\n# e.g. 1.b690b47.1.1.cb73ce6.35.1510 from origin b690b47, one and one different, locally at commit cb73ce6, with a further 35 lines of change, built in 2015 in the tenth month.  Day numbers are excluded for brevity, as there is already much uncertainty in the local changes and this field is only to indicate a rough level of freshness.  Build numer starts with \"1.\" to avoid strange compile errors.\ncd \"${SOURCE_ROOT}\"\n\n# Skip setting the build number if this is a SANDBOXING build, since the helper probably needs a matching build number. Making them match is as easy as putting this script in both targets, though it's also easy to have one target read it from the other, but that's a task best left to the developer doing SANDBOXING builds since they would be in the position to make sure it is done correctly.\ngrep -q '^#define SANDBOXING *$' Flycut_Prefix.pch\nif [ \"0\" != \"$?\" ]\nthen\n\t\n\tORIGIN=$(git rev-parse --short remotes/origin/master)\n\tOFFSET=\".$(git status|sed -n '1,/^# *$/ p'|grep \"[0-9]\"|head -1|sed 's/^[^0-9]*//;s/[^0-9]*$//'|sed 's/[^0-9][^0-9]*/./')\"\n\tLOCAL=\".$(git rev-parse --short HEAD)\"\n\tUNCOMMITTED=\".$(git diff -b -w HEAD|grep \"^[+\\-]\"|grep -v \"^[+\\-][+\\-][+\\-] [ab]\"|wc -l|sed 's/[^0-9]//g')\"\n\tBUILD_YEAR_MONTH=\".$(date +\"%y%m\")\"\n\tif [ \".$ORIGIN\" == \"$LOCAL\" ]\n\tthen\n\t\tOFFSET=\"\"\n\t\tLOCAL=\"\"\n\t\tif [ \".0\" == \"$UNCOMMITTED\" ]\n\t\tthen\n\t\t\tUNCOMMITTED=\"\"\n\t\t\tBUILD_YEAR_MONTH=\"\"\n\t\tfi\n\tfi\n\tNEWVERSIONSTRING=\"1.$ORIGIN$OFFSET$LOCAL$UNCOMMITTED$BUILD_YEAR_MONTH\"\n\t/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $NEWVERSIONSTRING\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\nfi\n";
+			shellScript = "# Sets the build number to identify, to some extent, the git version of the code.\n# Combines the hash of the origin commit, number of commits of divergence, local HEAD commit, local uncommitted lines of change, and year/month of build.\n# Eliminates all except for the origin commit if there are no local changes, since that can be easily tracked.\n# e.g. 1.b690b47.1.1.cb73ce6.35.1510 from origin b690b47, one and one different, locally at commit cb73ce6, with a further 35 lines of change, built in 2015 in the tenth month.  Day numbers are excluded for brevity, as there is already much uncertainty in the local changes and this field is only to indicate a rough level of freshness.  Build numer starts with \"1.\" to avoid strange compile errors.\ncd \"${SOURCE_ROOT}\"\n\n# Skip setting the build number if this is a SANDBOXING build, since the helper probably needs a matching build number. Making them match is as easy as putting this script in both targets, though it's also easy to have one target read it from the other, but that's a task best left to the developer doing SANDBOXING builds since they would be in the position to make sure it is done correctly.\ngrep -q '^#define SANDBOXING *$' Flycut_Prefix.pch\nif [ \"0\" != \"$?\" ]\nthen\n\t\n#\tORIGIN=$(git rev-parse --short remotes/origin/master)\n#\tOFFSET=\".$(git status|sed -n '1,/^# *$/ p'|grep \"[0-9]\"|head -1|sed 's/^[^0-9]*//;s/[^0-9]*$//'|sed 's/[^0-9][^0-9]*/./')\"\n#\tLOCAL=\".$(git rev-parse --short HEAD)\"\n#\tUNCOMMITTED=\".$(git diff -b -w HEAD|grep \"^[+\\-]\"|grep -v \"^[+\\-][+\\-][+\\-] [ab]\"|wc -l|sed 's/[^0-9]//g')\"\n#\tBUILD_YEAR_MONTH=\".$(date +\"%y%m\")\"\n#\tif [ \".$ORIGIN\" == \"$LOCAL\" ]\n#\tthen\n#\t\tOFFSET=\"\"\n#\t\tLOCAL=\"\"\n#\t\tif [ \".0\" == \"$UNCOMMITTED\" ]\n#\t\tthen\n#\t\t\tUNCOMMITTED=\"\"\n#\t\t\tBUILD_YEAR_MONTH=\"\"\n#\t\tfi\n#\tfi\n#\tNEWVERSIONSTRING=\"1.$ORIGIN$OFFSET$LOCAL$UNCOMMITTED$BUILD_YEAR_MONTH\"\n#\t/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $NEWVERSIONSTRING\" \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1196,11 +1179,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = FlycutHelper/FlycutHelper.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = S8JLSG5ES7;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1213,11 +1197,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = FlycutHelper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.generalarcade.flycuthelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -1240,11 +1225,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = FlycutHelper/FlycutHelper.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = S8JLSG5ES7;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1252,7 +1238,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = FlycutHelper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.generalarcade.flycuthelper;
@@ -1619,10 +1605,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = FlycutDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = S8JLSG5ES7;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS)",
@@ -1640,11 +1628,12 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Applications;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				MARKETING_VERSION = 1.9.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 1.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.generalarcade.flycut;
 				PRODUCT_NAME = Flycut;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -1656,10 +1645,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = Flycut.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = S8JLSG5ES7;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS)",
@@ -1674,11 +1665,12 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Applications;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				MARKETING_VERSION = 1.9.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MARKETING_VERSION = 1.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.generalarcade.flycut;
 				PRODUCT_NAME = Flycut;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRIP_INSTALLED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
